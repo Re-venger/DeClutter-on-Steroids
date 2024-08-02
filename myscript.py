@@ -112,11 +112,14 @@ def handleFileSegregation(path):
     for file in dirList:
         if os.path.isfile(os.path.join(path, file)):
             file_ext_typ = file.split('.')[-1]
-            file_ext_folder_type = file_extensions_map[file_ext_typ]
-            destFolder = os.path.join(path, file_ext_folder_type)
-            createFolder(folderName=destFolder)
-            shutil.move(file, os.path.join(destFolder, file))
-            logger.debug(f"{file} was added to {destFolder}")
+            try:
+                file_ext_folder_type = file_extensions_map[file_ext_typ]
+                destFolder = os.path.join(path, file_ext_folder_type)
+                createFolder(folderName=destFolder)
+                shutil.move(file, os.path.join(destFolder, file))
+                logger.debug(f"{file} was added to {destFolder}")
+            except KeyError:
+                logger.warning(f'Ignored ==> Special File Type [{file}]')
         else:
             logger.warning(f"Skipped ==> [{file}] type [Folder]")
 
